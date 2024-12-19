@@ -7,30 +7,30 @@ module.exports = {
     try {
       const { username, email, password } = req.body;
 
-      // Setăm tipul implicit 'client' dacă nu este furnizat
+     
       const type = req.body.type || 'client';
 
-      // Validări de bază
+      
       if (!username || !email || !password) {
         return res.status(400).json({ error: 'Completează toate câmpurile!' });
       }
 
-      // Verificăm dacă email deja există
+     
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         return res.status(409).json({ error: 'Email deja folosit!' });
       }
 
-      // Hash parola
+     
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Creăm utilizatorul
+     
       const newUser = await User.create({
         username,
         email,
         password_hash: hashedPassword,
-        type  // Tipul va fi 'client' dacă nu a fost specificat altceva
+        type  
       });
 
       return res.status(201).json({ message: 'Utilizator creat cu succes!', user: newUser });
@@ -57,11 +57,11 @@ module.exports = {
         return res.status(401).json({ error: 'Credențiale invalide!' });
       }
 
-      // Generăm token JWT
+   
       const token = jwt.sign(
         { id: user.id, type: user.type }, 
         process.env.JWT_SECRET, 
-        { expiresIn: '1d' } // Token valabil 1 zi
+        { expiresIn: '1d' } 
       );
 
       return res.json({ message: 'Logare reușită!', token });
@@ -73,7 +73,7 @@ module.exports = {
 
   getProfile: async (req, res) => {
     try {
-      const userId = req.user.id; // req.user va fi populat de middleware-ul JWT
+      const userId = req.user.id; 
       const user = await User.findByPk(userId, {
         attributes: ['id', 'username', 'email', 'type']
       });
