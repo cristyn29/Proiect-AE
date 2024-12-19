@@ -5,14 +5,17 @@ const jwt = require('jsonwebtoken');
 module.exports = {
   register: async (req, res) => {
     try {
-      const { username, email, password, type } = req.body;
+      const { username, email, password } = req.body;
+
+      // Setăm tipul implicit 'client' dacă nu este furnizat
+      const type = req.body.type || 'client';
 
       // Validări de bază
-      if (!username || !email || !password || !type) {
+      if (!username || !email || !password) {
         return res.status(400).json({ error: 'Completează toate câmpurile!' });
       }
 
-      // Verificăm dacă username sau email deja există
+      // Verificăm dacă email deja există
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
         return res.status(409).json({ error: 'Email deja folosit!' });
@@ -27,7 +30,7 @@ module.exports = {
         username,
         email,
         password_hash: hashedPassword,
-        type
+        type  // Tipul va fi 'client' dacă nu a fost specificat altceva
       });
 
       return res.status(201).json({ message: 'Utilizator creat cu succes!', user: newUser });
@@ -49,7 +52,6 @@ module.exports = {
         return res.status(401).json({ error: 'Credențiale invalide!' });
       }
 
-      // Verificăm parola
       const match = await bcrypt.compare(password, user.password_hash);
       if (!match) {
         return res.status(401).json({ error: 'Credențiale invalide!' });
@@ -70,7 +72,6 @@ module.exports = {
   },
 
   getProfile: async (req, res) => {
-    // Acest endpoint va fi protejat de middleware de autentificare
     try {
       const userId = req.user.id; // req.user va fi populat de middleware-ul JWT
       const user = await User.findByPk(userId, {
