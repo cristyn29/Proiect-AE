@@ -12,7 +12,7 @@ module.exports = {
       // Luăm produsele
       const products = await Product.findAll();
 
-      // Folosim API-ul frankfurter.app
+ 
       const apiUrl = `https://api.frankfurter.app/latest?from=USD&to=${currency}`;
       const response = await axios.get(apiUrl);
       console.log('API response:', response.data);

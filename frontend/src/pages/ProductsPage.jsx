@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../api/axiosInstance'; // Asigură-te că axiosInstance este corect configurat
+import axios from '../api/axiosInstance'; 
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [currency, setCurrency] = useState('USD');
-  const [chfRate, setChfRate] = useState(1); // Rata de conversie pentru CHF
+  const [chfRate, setChfRate] = useState(1); 
 
   // Fetch produse din API
   const fetchProducts = async () => {
     try {
       let url = '/products';
       if (currency !== 'USD') {
-        url = `/currency/${currency}`; // API-ul pentru conversie valutara
+        url = `/currency/${currency}`; 
       }
       const res = await axios.get(url);
       setProducts(res.data);
@@ -20,11 +20,11 @@ function ProductsPage() {
     }
   };
 
-  // Obține rata de conversie pentru CHF
+
   const fetchChfRate = async () => {
     try {
       const response = await axios.get(`/currency/CHF`);
-      setChfRate(response.data.conversionRate); // Actualizează rata de conversie pentru CHF
+      setChfRate(response.data.conversionRate); 
     } catch (err) {
       console.error(err);
     }
@@ -33,13 +33,13 @@ function ProductsPage() {
   useEffect(() => {
     fetchProducts();
     if (currency === 'CHF') {
-      fetchChfRate(); // Dacă moneda aleasă este CHF, fetch rata de conversie
+      fetchChfRate();
     }
   }, [currency]);
 
-  const token = localStorage.getItem('token'); // Verificăm dacă utilizatorul este logat
+  const token = localStorage.getItem('token'); 
 
-  // Adăugare produs în coș
+
   const addToCart = async (productId) => {
     if (!token) {
       alert('Trebuie să fii logat pentru a adăuga în coș!');
@@ -77,7 +77,7 @@ function ProductsPage() {
         >
           <option value="USD">USD</option>
           <option value="EUR">EUR</option>
-          <option value="CHF">CHF</option> {/* Adăugăm CHF */}
+          <option value="CHF">CHF</option> {}
         </select>
       </div>
 
@@ -85,7 +85,7 @@ function ProductsPage() {
         {products.map((prod) => {
           let priceToDisplay = prod.price;
           if (currency === 'CHF') {
-            // Conversie pentru CHF
+        
             priceToDisplay = prod.price_converted ? prod.price_converted : (prod.price * chfRate).toFixed(2);
           } else if (currency === 'EUR') {
             priceToDisplay = prod.price_converted;
