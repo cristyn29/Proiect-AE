@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]); // Lista produselor din coș
-  const [loading, setLoading] = useState(true);   // Indicator de încărcare
-  const [error, setError] = useState('');         // Mesaj pentru erori
-  const [orderMessage, setOrderMessage] = useState(''); // Mesaj după plasarea comenzii
+  const [cartItems, setCartItems] = useState([]); 
+  const [loading, setLoading] = useState(true);  
+  const [error, setError] = useState('');        
+  const [orderMessage, setOrderMessage] = useState(''); 
 
-  // Funcție pentru încărcarea produselor din coș
+
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -22,7 +22,7 @@ const Cart = () => {
     }
   };
 
-  // Funcție pentru ștergerea unui produs din coș
+ 
   const handleRemoveFromCart = async (id) => {
     try {
       const token = localStorage.getItem('token');
@@ -35,28 +35,28 @@ const Cart = () => {
     }
   };
 
-  // Funcție pentru plasarea comenzii
+  
   const handlePlaceOrder = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
         'http://localhost:3001/api/orders',
-        {}, // Body gol pentru că datele sunt preluate din token
+        {}, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setOrderMessage(response.data.message); // Setează mesajul de succes
-      setCartItems([]); // Golește coșul din UI
+      setOrderMessage(response.data.message); 
+      setCartItems([]); 
     } catch (err) {
       setError('Eroare la plasarea comenzii.');
     }
   };
 
-  // Încarcă produsele din coș la montarea componentei
+
   useEffect(() => {
     fetchCartItems();
   }, []);
 
-  // Afișează indicatorul de încărcare sau erorile
+ 
   if (loading) return <p>Se încarcă...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
