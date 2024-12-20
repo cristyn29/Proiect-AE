@@ -6,4 +6,4 @@ Pt frontend
 cd frontend
 npm start
 
-Pentru baza de date, detaliile de login sunt in fisierul .env
+Pentru baza de date, detaliile de login sunt in fisierul database.js
